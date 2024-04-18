@@ -22,5 +22,5 @@
         span.sr-only Login with Microsoft
     -if ENV["KEYCLOAK_ID"] && ENV["KEYCLOAK_ID"] != ""
       a.btn.keycloak_openid href="#{user_keycloakopenid_omniauth_authorize_url}" title="Login with Keycloak" data-method="post"
-        i.fa.fa-inverse.fa-windows.fa-3x
+        ==image_tag("keycloak_logo.svg", alt: "Login with Keycloak", title: "TLogin with Keycloak")
         span.sr-only Login with Keycloak
