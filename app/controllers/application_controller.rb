@@ -86,6 +86,10 @@ class ApplicationController < ActionController::Base
       GroupService.refresh_user(@user)
     elsif @user.nil?
       @user = User.new # blank user object - too much breaks otherwise
+      # handle Keycloak autologin, don't redirect on callback or user sign-in(which shows keycloak errors)
+      if ENV["KEYCLOAK_AUTOLOGIN"] == 'true' && request.original_url != user_keycloakopenid_omniauth_authorize_url && request.env['PATH_INFO'] != '/users/auth/keycloakopenid/callback' && request.env['PATH_INFO'] != '/users/sign_in'
+        redirect_post "#{user_keycloakopenid_omniauth_authorize_url}", options: {authenticity_token: :auto}
+      end
     end
   end
 
