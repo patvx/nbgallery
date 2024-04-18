@@ -65,11 +65,13 @@ GEM
     acts_as_votable (0.14.0)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
+    aes_key_wrap (1.1.0)
     ast (2.4.2)
     autoprefixer-rails (10.4.15.0)
       execjs (~> 2)
     base64 (0.1.1)
     bcrypt (3.1.19)
+    bindata (2.5.0)
     bindex (0.8.1)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
@@ -147,6 +149,8 @@ GEM
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
     faraday-net_http (3.0.2)
     ffi (1.16.3)
     gaffe (1.2.0)
@@ -184,6 +188,13 @@ GEM
     jquery-slick-rails (1.10.0)
       railties (>= 3.1)
     json (2.6.3)
+    json-jwt (1.16.6)
+      activesupport (>= 4.2)
+      aes_key_wrap
+      base64
+      bindata
+      faraday (~> 2.0)
+      faraday-follow_redirects
     jwt (2.7.1)
     language_server-protocol (3.17.0.3)
     libv8-node (18.16.0.0)
@@ -258,6 +269,11 @@ GEM
       oauth2 (~> 2.0.6)
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.8.0)
+    omniauth-keycloak (1.5.2)
+      faraday
+      json-jwt (> 1.13.0)
+      omniauth (>= 2.0)
+      omniauth-oauth2 (>= 1.7, < 1.9)
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
@@ -433,7 +449,9 @@ GEM
     zeitwerk (2.6.12)
 
 PLATFORMS
+  arm64-darwin
   ruby
+  unknown
 
 DEPENDENCIES
   activerecord-import
@@ -470,6 +488,7 @@ DEPENDENCIES
   omniauth-github
   omniauth-gitlab
   omniauth-google-oauth2
+  omniauth-keycloak
   omniauth-rails_csrf_protection
   overcommit
   pry-rails
