@@ -31,7 +31,7 @@ GALLERY__SOLR__HOSTNAME=${GALLERY__SOLR__HOSTNAME:=solr}
 GALLERY__SOLR__PORT=${GALLERY__SOLR__PORT:=8983}
 KEYCLOAK_ID=ag-nbgallery
 KEYCLOAK_SECRET=
-KEYCLOAK_URL="http://host.docker.internal/"
+KEYCLOAK_URL=
 KEYCLOAK_REALM=ag
 
 docker run \
@@ -60,9 +60,6 @@ docker run \
   -e KEYCLOAK_SECRET=$KEYCLOAK_SECRET \
   -e KEYCLOAK_URL=$KEYCLOAK_URL \
   -e KEYCLOAK_REALM=$KEYCLOAK_REALM \
-  -e GITLAB_ID=addd \
-  -e GITLAB_SECRET=DDD \
-  -e GITLAB_URL=www.gitlab.com \
   -e RAILS_SERVE_STATIC_FILES=true \
   -e RUN_SOLR=false \
   --env-file `pwd`/.env \

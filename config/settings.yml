@@ -275,3 +275,5 @@ pagination:
   paginate_large_notebooks: true
   cells_per_page: 20
   notebooks_per_page: 20
+
+disable_ssl_verify: true
