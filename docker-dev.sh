@@ -21,6 +21,13 @@
 #
 # Run the rails server on port 3000:
 #   bundle exec rails server -b 0.0.0.0
+#
+# To start over with fresh db
+#   - stop mysql container
+#   - delete docker/data/mysql
+#   - start mysql container
+#   - in nbgallery docker run: 
+#         bundle exec rails runner db/schema.rb
 
 GALLERY__MYSQL__HOST=${GALLERY__MYSQL__HOST:=mysql}
 GALLERY__MYSQL__PORT=${GALLERY__MYSQL__PORT:=3306}
@@ -34,6 +41,7 @@ KEYCLOAK_SECRET=
 KEYCLOAK_URL=
 KEYCLOAK_REALM=ag
 KEYCLOAK_AUTOLOGIN=true
+KEYCLOAK_AUTOCREATEUSER=true
 
 docker run \
   --rm \
@@ -62,6 +70,7 @@ docker run \
   -e KEYCLOAK_URL=$KEYCLOAK_URL \
   -e KEYCLOAK_REALM=$KEYCLOAK_REALM \
   -e KEYCLOAK_AUTOLOGIN=$KEYCLOAK_AUTOLOGIN \
+  -e KEYCLOAK_AUTOCREATEUSER=$KEYCLOAK_AUTOCREATEUSER \
   -e RAILS_SERVE_STATIC_FILES=true \
   -e RUN_SOLR=false \
   --env-file `pwd`/.env \

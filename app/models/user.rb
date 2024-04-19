@@ -574,6 +574,7 @@ class User < ApplicationRecord
       password: Devise.friendly_token[0, 20],
       confirmed_at: Time.now.utc.to_datetime.to_s,
       confirmation_token: nil,
+      user_name: info['user_name'],
       first_name: info.first_name,
       last_name: info.last_name
     }
