@@ -139,7 +139,7 @@ markdown:
 # Run in Jupyter Preferences
 run_in_jupyter:
   no_instance_title: No Jupyter Instance
-  no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='/environments'>environments</a>.
+  no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='<%= ENV['RAILS_RELATIVE_URL_ROOT'] || '' %>/environments'>environments</a>.
   run_failed_message:
   default_interface: 'lab'
   interfaces:

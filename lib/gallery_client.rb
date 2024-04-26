@@ -23,7 +23,7 @@ class GalleryClient
         file: File.new(filename),
         agree: true
       }.merge(params)
-      response = post('/stages', body: params)
+      response = post(ENV['RAILS_RELATIVE_URL_ROOT'] || ''  + '/stages', body: params)
       raise Exception.new('stage failed', response.parsed_response) unless
         response.code == 201
       response['staging_id']
@@ -40,7 +40,7 @@ class GalleryClient
         title: staging_id,
         description: 'No description provided'
       }.merge(params)
-      response = post('/notebooks', body: params)
+      response = post(ENV['RAILS_RELATIVE_URL_ROOT'] || '' + '/notebooks', body: params)
       raise Exception.new('upload failed', response.parsed_response) unless
         response.code == 200 || response.code == 201
       response['uuid']
@@ -51,7 +51,7 @@ class GalleryClient
         staging_id: staging_id,
         agree: true
       }.merge(params)
-      response = patch("/notebooks/#{uuid}", body: params)
+      response = patch(ENV['RAILS_RELATIVE_URL_ROOT'] || '' + "/notebooks/#{uuid}", body: params)
       raise Exception.new('update failed', response.parsed_response) unless
         response.code == 200
       response['uuid']
