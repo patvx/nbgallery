@@ -2,6 +2,7 @@
 $.ajaxSetup({ xhrFields: { withCredentials: true } });
 
 $(document).ready(function() {
+
   <%
   interfaces = {}
   GalleryConfig.run_in_jupyter.interfaces.each do | interface |
@@ -113,10 +114,47 @@ $(document).ready(function() {
     }
   }
 
-  var check_for_existence = function(name,url,notebook,user_interface) {
+  async function doAjax(url, params = {}, method = 'POST') {
+    return $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      data: params
+    });
+}
+
+  var getKeycloakToken = async function() { 
+    var expires = Cookies.get('kc_expires');
+    if((Date.now()/1000) - 5 < parseInt(expires)  ){
+      return Cookies.get('kc_access_token');
+    }
+    try {
+      console.log('Getting new token')
+      var res = await doAjax( '<%= ENV['KEYCLOAK_URL'] + 'auth/realms/' + ENV['KEYCLOAK_REALM'] + '/protocol/openid-connect/token' %>',
+       { grant_type: 'refresh_token',
+          client_id: '<%= ENV['KEYCLOAK_ID'] %>',
+          refresh_token: Cookies.get('kc_refresh_token') }
+      );
+      Cookies.set('kc_access_token', res.access_token);
+      Cookies.set('kc_refresh_token', res.refresh_token);
+      Cookies.set('kc_expires', Math.round(Date.now()/1000) + parseInt(res.expires_in) - 5);
+    } catch(e){
+      console.error("Keycloak token error", e)
+    }
+  }
+
+  var check_for_existence = async function(name,url,notebook,user_interface) {  
+    if('<%= ENV['KEYCLOAK_ID'] %>'){
+       await getKeycloakToken();
+    }
+    
+  
     $.ajax({
       method: 'GET',
       url: url + 'api/contents/' + encodeURIComponent(name),
+      headers: {
+        Authorization: 'Bearer ' + Cookies.get('kc_access_token')
+      },
       cache: false,
       success: function(response) {
         console.log(response);
@@ -140,21 +178,28 @@ $(document).ready(function() {
     // PKI-enable an OPTIONS request, and an OPTIONS request is necessary on PUTs, we
     // have a server-side extension that proxies the PUT through a POST.
     $.ajax({
-      url: url + 'post/' + encodeURIComponent(name),
+      url: url + 'api/contents/' + encodeURIComponent(name),
       type: 'POST',
-      success: function() {
+      contentType: "application/json",
+      headers: {
+        Authorization: 'Bearer ' + Cookies.get('kc_access_token')
+      },
+      success: function(response) {
         console.log("User Interface " + user_interface);
         if (jupyter_interfaces[user_interface]){
           interface_url = jupyter_interfaces[user_interface]['url'];
         }else{
           interface_url = jupyter_interfaces['<%=GalleryConfig.run_in_jupyter.default_interface%>']['url'];
         }
-        window.open(url + interface_url + encodeURIComponent(name), '_blank');
+        // set jupyter hub url for user
+         var fullUrl = url.replace('api/nbgallery','jupyter/user/' + response.username ) + interface_url + encodeURIComponent(name);
+         window.open(fullUrl, '_blank');
       },
       error: function(response) {
         makeAlert("error", "", "Could not send notebook to " + url + ". <%=GalleryConfig.run_in_jupyter.run_failed_message.gsub("\\","\\\\").gsub('"', '\"') unless GalleryConfig.run_in_jupyter.run_failed_message.nil? %>");
       },
       data: JSON.stringify({
+        name: name,
         type: 'notebook',
         content: JSON.parse(notebook)
       })

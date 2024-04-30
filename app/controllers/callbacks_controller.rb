@@ -5,6 +5,14 @@ class CallbacksController < Devise::OmniauthCallbacksController
       auth = request.env['omniauth.auth']
       # Find an identity here
       @identity = Identity.find_with_omniauth(auth)
+ 
+      # if keycloak then store keys in cookie for Run in Jupyter function
+      if provider == :keycloakopenid
+        Rails.logger.info('setting keycloak cookies')
+        cookies[:kc_access_token] = { value: auth.credentials.token, expires: 1.hour }
+        cookies[:kc_refresh_token] = { value: auth.credentials.refresh_token, expires: 1.day }
+        cookies[:kc_expires] = { value: auth.credentials.expires_at, expires: 1.day }
+      end
 
       if @identity.nil?
         Rails.logger.debug('Registering')

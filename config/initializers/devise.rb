@@ -257,7 +257,7 @@ Devise.setup do |config|
   config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET']
   config.omniauth :azure_activedirectory_v2,client_id: ENV['AZURE_ID'], client_secret: ENV['AZURE_SECRET'], tenant_id: ENV['AZURE_TENANT']
   config.omniauth :keycloakopenid, ENV['KEYCLOAK_ID'], ENV['KEYCLOAK_SECRET'],
-    client_options: {base_url: '', site: ENV['KEYCLOAK_URL'], realm: ENV['KEYCLOAK_REALM']}, :strategy_class => OmniAuth::Strategies::KeycloakOpenId
+    client_options: { site: ENV['KEYCLOAK_URL'], realm: ENV['KEYCLOAK_REALM']}, :strategy_class => OmniAuth::Strategies::KeycloakOpenId
 
 
   # ==> Warden configuration
