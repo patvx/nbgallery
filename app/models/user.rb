@@ -576,8 +576,10 @@ class User < ApplicationRecord
       confirmation_token: nil,
       user_name: info['user_name'],
       first_name: info.first_name,
-      last_name: info.last_name
+      last_name: info.last_name,
+      environments: [Environment.new(name: ENV['JUPYTERHUB_NAME'], url: ENV['JUPYTERHUB_URL'])]
     }
+    
     create!(user)
   end
 
